@@ -164,8 +164,7 @@ class Caso7AutoresLibrosEditorial(TemplateView):
 
     @staticmethod
     def autores_libros_editorial():
-        #libros = Libro.objects.all().select_related("editorial")
-        autores = Autor.objects.all().select_related("book__editorial").prefetch_related("book")
+        autores = Autor.objects.all().prefetch_related("book")
         for a in autores:
             for l in a.book.all():
                 print(a.name, l.titulo, l.editorial.nombre)
