@@ -1,39 +1,39 @@
 # Django
 from django.urls import path
-from aeto_exam import colin
+from aeto_exam import colin as compare
 
 # Django
 from django.urls import path
-from aeto_exam.views import enano, siento_que_olvide_a_alguien, zorra
+from aeto_exam.views import enano, siento_que_olvide_a_alguien, zorra, colin
 
 gran_colin = [
     path(
-        route="colin/Caso1LibrosConEditorial",
-        view=colin.Caso1LibrosConEditorial.as_view(),
+        route="compare/Caso1LibrosConEditorial",
+        view=compare.Caso1LibrosConEditorial.as_view(),
     ),
     path(
-        route="colin/Caso2CalificacionesConLibro",
-        view=colin.Caso2CalificacionesConLibro.as_view(),
+        route="compare/Caso2CalificacionesConLibro",
+        view=compare.Caso2CalificacionesConLibro.as_view(),
     ),
     path(
-        route="colin/Caso3AutoresConLibros",
-        view=colin.Caso3AutoresConLibros.as_view(),
+        route="compare/Caso3AutoresConLibros",
+        view=compare.Caso3AutoresConLibros.as_view(),
     ),
     path(
-        route="colin/Caso4ValuesEjemplo",
-        view=colin.Caso4ValuesEjemplo.as_view(),
+        route="compare/Caso4ValuesEjemplo",
+        view=compare.Caso4ValuesEjemplo.as_view(),
     ),
     path(
-        route="colin/Caso5OnlyEjemplo",
-        view=colin.Caso5OnlyEjemplo.as_view(),
+        route="compare/Caso5OnlyEjemplo",
+        view=compare.Caso5OnlyEjemplo.as_view(),
     ),
     path(
-        route="colin/Caso6DeferEjemplo",
-        view=colin.Caso6DeferEjemplo.as_view(),
+        route="compare/Caso6DeferEjemplo",
+        view=compare.Caso6DeferEjemplo.as_view(),
     ),
     path(
-        route="colin/Caso7AutoresLibrosEditorial",
-        view=colin.Caso7AutoresLibrosEditorial.as_view(),
+        route="compare/Caso7AutoresLibrosEditorial",
+        view=compare.Caso7AutoresLibrosEditorial.as_view(),
     ),
 ]
 
@@ -71,6 +71,17 @@ los_demas = [
     path("zorra/Caso5OnlyEjemplo", zorra.Caso5OnlyEjemplo.as_view()),
     path("zorra/Caso6DeferEjemplo", zorra.Caso6DeferEjemplo.as_view()),
     path("zorra/Caso7AutoresLibrosEditorial", zorra.Caso7AutoresLibrosEditorial.as_view()),
+    
+    # =====================
+    # Rutas para colin.py
+    # =====================
+    path("colin/Caso1LibrosConEditorial", colin.Caso1LibrosConEditorial.as_view()),
+    path("colin/Caso2CalificacionesConLibro", colin.Caso2CalificacionesConLibro.as_view()),
+    path("colin/Caso3AutoresConLibros", colin.Caso3AutoresConLibros.as_view()),
+    path("colin/Caso4ValuesEjemplo", colin.Caso4ValuesEjemplo.as_view()),
+    path("colin/Caso5OnlyEjemplo", colin.Caso5OnlyEjemplo.as_view()),
+    path("colin/Caso6DeferEjemplo", colin.Caso6DeferEjemplo.as_view()),
+    path("colin/Caso7AutoresLibrosEditorial", colin.Caso7AutoresLibrosEditorial.as_view()),
 ]
 
 urlpatterns = []
