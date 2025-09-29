@@ -9,7 +9,7 @@ from editorial.models import Editorial
 
 
 # --- Caso 1 ---
-class Caso1LibrosConEditorial(TemplateView):
+class Caso1LibrosConEditorial(TemplateView): # Bien
     template_name = "home.html"
 
     def get_context_data(self, **kwargs):
@@ -36,7 +36,7 @@ class Caso1LibrosConEditorial(TemplateView):
 
 
 # --- Caso 2 ---
-class Caso2CalificacionesConLibro(TemplateView):
+class Caso2CalificacionesConLibro(TemplateView): # Corrijas Mal
     template_name = "home.html"
 
     def get_context_data(self, **kwargs):
@@ -49,7 +49,11 @@ class Caso2CalificacionesConLibro(TemplateView):
     def calificaciones_con_libro():
 
         califs_query = LibroCalificacion.objects.all().only('estrellas')
-        califs_prefetch= Prefetch('libro_calificacion', queryset=califs_query, to_attr='calificacion')
+        califs_prefetch= Prefetch(
+            'libro_calificacion', 
+            queryset=califs_query, 
+            to_attr='calificacion'
+        )
         
         libros= Libro.objects.all().prefetch_related(califs_prefetch).only('titulo')
         for libro in libros:
@@ -65,7 +69,7 @@ class Caso2CalificacionesConLibro(TemplateView):
 
 
 # --- Caso 3 ---
-class Caso3AutoresConLibros(TemplateView):
+class Caso3AutoresConLibros(TemplateView):#Bien
     template_name = "home.html"
 
     def get_context_data(self, **kwargs):
@@ -97,7 +101,7 @@ class Caso3AutoresConLibros(TemplateView):
 
 
 # --- Caso 4 ---
-class Caso4ValuesEjemplo(TemplateView):
+class Caso4ValuesEjemplo(TemplateView): # Mal
     template_name = "home.html"
 
     def get_context_data(self, **kwargs):
@@ -121,7 +125,7 @@ class Caso4ValuesEjemplo(TemplateView):
 
 
 # --- Caso 5 ---
-class Caso5OnlyEjemplo(TemplateView):
+class Caso5OnlyEjemplo(TemplateView): #Mal y rehcaer
     template_name = "home.html"
 
     def get_context_data(self, **kwargs):
@@ -134,8 +138,11 @@ class Caso5OnlyEjemplo(TemplateView):
     def only_ejemplo():
          
         libros_query = Libro.objects.only("titulo")
-        prefect_libro=  Prefetch('libro_editorial', queryset= libros_query, to_attr='info_libro')                                       
-        editoriales = Editorial.objects.filter(nombre__iexact='editorial gamma').prefetch_related(prefect_libro)            
+        prefect_libro=  Prefetch('libro_editorial', queryset= libros_query, to_attr='info_libro')
+                                               
+        editoriales = Editorial.objects.filter(
+            nombre__iexact='editorial gamma').prefetch_related(prefect_libro)            
+        
         for editorial in editoriales:
                 for libro in editorial.info_libro:
                     print(libro.titulo, editorial.nombre)
@@ -149,7 +156,7 @@ class Caso5OnlyEjemplo(TemplateView):
 
 
 # --- Caso 6 ---
-class Caso6DeferEjemplo(TemplateView):
+class Caso6DeferEjemplo(TemplateView): # MAAL
     template_name = "home.html"
 
     def get_context_data(self, **kwargs):
@@ -173,7 +180,7 @@ class Caso6DeferEjemplo(TemplateView):
 
 
 # --- Caso 7 ---
-class Caso7AutoresLibrosEditorial(TemplateView):
+class Caso7AutoresLibrosEditorial(TemplateView):#Mal rehacer
     template_name = "home.html"
 
     def get_context_data(self, **kwargs):
@@ -202,3 +209,11 @@ class Caso7AutoresLibrosEditorial(TemplateView):
         EJERCICIO:
         - Optimízalo.
         """
+ # Bien
+ # Bien
+ 
+ # mal
+ # mal
+ # mal
+ # mal
+ # mal
