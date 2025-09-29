@@ -20,7 +20,7 @@ class Caso1LibrosConEditorial(TemplateView):
 
     @staticmethod
     def libros_con_editorial():
-        libros = Libro.objects.all()
+        libros = Libro.objects.all().select_related("editorial")
         for libro in libros:
             print(libro.titulo, libro.editorial.nombre)
 
@@ -44,7 +44,7 @@ class Caso2CalificacionesConLibro(TemplateView):
 
     @staticmethod
     def calificaciones_con_libro():
-        califs = LibroCalificacion.objects.all()
+        califs = LibroCalificacion.objects.all().select_related("libro")
         for c in califs:
             print(c.estrellas, "->", c.libro.titulo)
 
@@ -68,7 +68,7 @@ class Caso3AutoresConLibros(TemplateView):
 
     @staticmethod
     def autores_con_libros():
-        autores = Autor.objects.all()
+        autores = Autor.objects.all().prefetch_related("book")
         for a in autores:
             print(a.name, [libro.titulo for libro in a.book.all()])
 
@@ -92,7 +92,7 @@ class Caso4ValuesEjemplo(TemplateView):
 
     @staticmethod
     def values_ejemplo():
-        datos = Libro.objects.values("isbn", "titulo", "editorial__nombre")
+        datos = Libro.objects.all().select_related("editorial").only("isbn", "titulo", "editorial__nombre")
         for d in datos:
             print(d)
 
@@ -116,7 +116,7 @@ class Caso5OnlyEjemplo(TemplateView):
 
     @staticmethod
     def only_ejemplo():
-        libros = Libro.objects.only("titulo")
+        libros = Libro.objects.all().prefetch_related("editorial").only("titulo", "editorial")
         for l in libros:
             print(l.titulo, l.editorial.nombre)
 
@@ -140,7 +140,7 @@ class Caso6DeferEjemplo(TemplateView):
 
     @staticmethod
     def defer_ejemplo():
-        libros = Libro.objects.defer("desc_corta")
+        libros = Libro.objects.select_related("editorial").defer("desc_corta")
         for l in libros:
             print(l.titulo)
 
@@ -164,7 +164,8 @@ class Caso7AutoresLibrosEditorial(TemplateView):
 
     @staticmethod
     def autores_libros_editorial():
-        autores = Autor.objects.all()
+        #libros = Libro.objects.all().select_related("editorial")
+        autores = Autor.objects.all().select_related("book__editorial").prefetch_related("book")
         for a in autores:
             for l in a.book.all():
                 print(a.name, l.titulo, l.editorial.nombre)
