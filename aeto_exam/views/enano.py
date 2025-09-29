@@ -9,7 +9,7 @@ from editorial.models import Editorial
 
 
 # --- Caso 1 ---
-class Caso1LibrosConEditorial(TemplateView):
+class Caso1LibrosConEditorial(TemplateView):#! Mejora
     template_name = "home.html"
 
     def get_context_data(self, **kwargs):
@@ -33,7 +33,7 @@ class Caso1LibrosConEditorial(TemplateView):
 
 
 # --- Caso 2 ---
-class Caso2CalificacionesConLibro(TemplateView):
+class Caso2CalificacionesConLibro(TemplateView): #! Mejora
     template_name = "home.html"
 
     def get_context_data(self, **kwargs):
@@ -57,7 +57,7 @@ class Caso2CalificacionesConLibro(TemplateView):
 
 
 # --- Caso 3 ---
-class Caso3AutoresConLibros(TemplateView):
+class Caso3AutoresConLibros(TemplateView): #! Mejora
     template_name = "home.html"
 
     def get_context_data(self, **kwargs):
@@ -81,7 +81,7 @@ class Caso3AutoresConLibros(TemplateView):
 
 
 # --- Caso 4 ---
-class Caso4ValuesEjemplo(TemplateView):
+class Caso4ValuesEjemplo(TemplateView): #! Mejora
     template_name = "home.html"
 
     def get_context_data(self, **kwargs):
@@ -105,7 +105,7 @@ class Caso4ValuesEjemplo(TemplateView):
 
 
 # --- Caso 5 ---
-class Caso5OnlyEjemplo(TemplateView):
+class Caso5OnlyEjemplo(TemplateView):# Mal
     template_name = "home.html"
 
     def get_context_data(self, **kwargs):
@@ -116,7 +116,7 @@ class Caso5OnlyEjemplo(TemplateView):
 
     @staticmethod
     def only_ejemplo():
-        libros = Libro.objects.only("titulo").select_related('editorial')
+        libros = Libro.objects.select_related('editorial').only("titulo")
         for l in libros:
             print(l.titulo, l.editorial.nombre)
 
@@ -153,7 +153,7 @@ class Caso6DeferEjemplo(TemplateView):
 
 
 # --- Caso 7 ---
-class Caso7AutoresLibrosEditorial(TemplateView):
+class Caso7AutoresLibrosEditorial(TemplateView): # Media
     template_name = "home.html"
 
     def get_context_data(self, **kwargs):
@@ -178,3 +178,13 @@ class Caso7AutoresLibrosEditorial(TemplateView):
         EJERCICIO:
         - Optimízalo.
         """
+
+# Bien
+# Bien
+# Bien
+# Bien
+# Bien
+
+# Media
+
+# Mal
