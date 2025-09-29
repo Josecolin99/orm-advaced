@@ -20,7 +20,7 @@ class Caso1LibrosConEditorial(TemplateView):
 
     @staticmethod
     def libros_con_editorial():
-        libros = Libro.objects.all().select_related("editorial")
+        libros = Libro.objects.all().select_related("editorial") #! Mejora
         for libro in libros:
             print(libro.titulo, libro.editorial.nombre)
 
@@ -44,7 +44,7 @@ class Caso2CalificacionesConLibro(TemplateView):
 
     @staticmethod
     def calificaciones_con_libro():
-        califs = LibroCalificacion.objects.all().select_related("libro")
+        califs = LibroCalificacion.objects.all().select_related("libro") #! Mejora
         for c in califs:
             print(c.estrellas, "->", c.libro.titulo)
 
@@ -68,7 +68,7 @@ class Caso3AutoresConLibros(TemplateView):
 
     @staticmethod
     def autores_con_libros():
-        autores = Autor.objects.all().prefetch_related("book")
+        autores = Autor.objects.all().prefetch_related("book") #! Mejora
         for a in autores:
             print(a.name, [libro.titulo for libro in a.book.all()])
 
@@ -91,7 +91,7 @@ class Caso4ValuesEjemplo(TemplateView):
         return context
 
     @staticmethod
-    def values_ejemplo():
+    def values_ejemplo(): #media
         datos = Libro.objects.all().select_related("editorial").only("isbn", "titulo", "editorial__nombre")
         for d in datos:
             print(d)
@@ -129,7 +129,7 @@ class Caso5OnlyEjemplo(TemplateView):
 
 
 # --- Caso 6 ---
-class Caso6DeferEjemplo(TemplateView):
+class Caso6DeferEjemplo(TemplateView): # Mal
     template_name = "home.html"
 
     def get_context_data(self, **kwargs):
@@ -153,7 +153,7 @@ class Caso6DeferEjemplo(TemplateView):
 
 
 # --- Caso 7 ---
-class Caso7AutoresLibrosEditorial(TemplateView):
+class Caso7AutoresLibrosEditorial(TemplateView):  # 4 queries including 2 similar and 2 duplicates )
     template_name = "home.html"
 
     def get_context_data(self, **kwargs):
@@ -175,3 +175,12 @@ class Caso7AutoresLibrosEditorial(TemplateView):
         EJERCICIO:
         - Optimízalo.
         """
+
+# MAla
+# MEdia
+# Media
+
+#O
+#O
+#O
+#O
