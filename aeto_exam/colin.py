@@ -161,12 +161,12 @@ class Caso7AutoresLibrosEditorial(TemplateView):
         context['que_estoy_viendo'] = "Caso 7: Autores con libros y editorial"
         return context
 
-    @staticmethod
-    def autores_libros_editorial():
-        autores = Autor.objects.all()
-        for a in autores:
-            for l in a.book.all():
-                print(a.name, l.titulo, l.editorial.nombre)
+@staticmethod
+def autores_libros_editorial():
+    autores = Autor.objects.all()
+    for a in autores:
+        for l in a.book.all():
+            print(a.name, l.titulo, l.editorial.nombre)
 
         """
         PROBLEMA:

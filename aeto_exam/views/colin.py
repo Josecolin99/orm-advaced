@@ -132,7 +132,7 @@ class Caso5OnlyEjemplo(TemplateView):
 
     @staticmethod
     def only_ejemplo():
-        libros = Libro.objects.prefetch_related(
+        libros = Libro.objects.select_related(
             'editorial'
         ).only(
             "titulo", 
