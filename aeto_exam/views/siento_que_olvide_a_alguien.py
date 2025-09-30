@@ -7,9 +7,8 @@ from autor.models import Autor
 from book.models import Libro, LibroCalificacion
 from editorial.models import Editorial
 
-
 # --- Caso 1 ---
-class Caso1LibrosConEditorial(TemplateView): # Bien
+class Caso1LibrosConEditorial(TemplateView):
     template_name = "home.html"
 
     def get_context_data(self, **kwargs):
@@ -20,10 +19,7 @@ class Caso1LibrosConEditorial(TemplateView): # Bien
 
     @staticmethod
     def libros_con_editorial():
-
-        id_editorial=[1,2]        
-        libros = Libro.objects.filter(
-            editorial__pk__in= id_editorial).select_related('editorial').only('titulo', 'editorial__nombre')
+        libros = Libro.objects.all().select_related('editorial').only('titulo','editorial__nombre')
         for libro in libros:
             print(libro.titulo, libro.editorial.nombre)
 
@@ -31,12 +27,12 @@ class Caso1LibrosConEditorial(TemplateView): # Bien
         PROBLEMA:
         - Esto genera un N+1 (una query para libros y otra por cada editorial).
         EJERCICIO:
-        - Optimízalo.
+        - Optimízalo
         """
 
 
 # --- Caso 2 ---
-class Caso2CalificacionesConLibro(TemplateView): # Corrijas Mal
+class Caso2CalificacionesConLibro(TemplateView):
     template_name = "home.html"
 
     def get_context_data(self, **kwargs):
@@ -47,29 +43,20 @@ class Caso2CalificacionesConLibro(TemplateView): # Corrijas Mal
 
     @staticmethod
     def calificaciones_con_libro():
-
-        califs_query = LibroCalificacion.objects.all().only('estrellas')
-        califs_prefetch= Prefetch(
-            'libro_calificacion', 
-            queryset=califs_query, 
-            to_attr='calificacion'
-        )
-        
-        libros= Libro.objects.all().prefetch_related(califs_prefetch).only('titulo')
-        for libro in libros:
-            for c in libro.calificacion:
-                print(c.estrellas, "->", libro.titulo)
+        califs = LibroCalificacion.objects.select_related('libro').only('estrellas', 'libro__titulo')
+        for c in califs:
+            print(c.estrellas, "->", c.libro.titulo)
 
         """
         PROBLEMA:
         - Cada acceso a c.libro dispara otra query (N+1).
         EJERCICIO:
-        - Optimízalo.
+        - Optimízalo
         """
 
 
 # --- Caso 3 ---
-class Caso3AutoresConLibros(TemplateView):#Bien
+class Caso3AutoresConLibros(TemplateView):
     template_name = "home.html"
 
     def get_context_data(self, **kwargs):
@@ -80,28 +67,20 @@ class Caso3AutoresConLibros(TemplateView):#Bien
 
     @staticmethod
     def autores_con_libros():
-
-        
-        autores_query = Autor.objects.all().only('name')
-        autores_prefetch= Prefetch('libros_autores', queryset=autores_query, to_attr='info_autor')
-        
-        libros= Libro.objects.all().prefetch_related(autores_prefetch).only('titulo')
-        
-        for libro in libros:
-            for a in libro.info_autor:
-                print(a.name, libro.titulo)
-            
+        autores = Autor.objects.all().prefetch_related('book').only('name', 'book__titulo')
+        for a in autores:
+            print(a.name, [libro.titulo for libro in a.book.all()])
 
         """
         PROBLEMA:
         - Autor → Libro es ManyToMany. Cada .book.all() dispara queries extra.
         EJERCICIO:
-        - Optimízalo.
+        - Optimízalo
         """
 
 
 # --- Caso 4 ---
-class Caso4ValuesEjemplo(TemplateView): # Mal
+class Caso4ValuesEjemplo(TemplateView):
     template_name = "home.html"
 
     def get_context_data(self, **kwargs):
@@ -112,7 +91,7 @@ class Caso4ValuesEjemplo(TemplateView): # Mal
 
     @staticmethod
     def values_ejemplo():
-        datos = Libro.objects.values("isbn", "titulo", "editorial__nombre")
+        datos = Libro.objects.only("isbn", "titulo", "editorial__nombre")
         for d in datos:
             print(d)
 
@@ -120,12 +99,12 @@ class Caso4ValuesEjemplo(TemplateView): # Mal
         PROBLEMA:
         - values() devuelve dicts, no instancias de modelos.
         EJERCICIO:
-        - Reescribe usando lo que toca.
+        - Reescribe
         """
 
 
 # --- Caso 5 ---
-class Caso5OnlyEjemplo(TemplateView): #Mal y rehcaer
+class Caso5OnlyEjemplo(TemplateView):
     template_name = "home.html"
 
     def get_context_data(self, **kwargs):
@@ -136,27 +115,20 @@ class Caso5OnlyEjemplo(TemplateView): #Mal y rehcaer
 
     @staticmethod
     def only_ejemplo():
-         
-        libros_query = Libro.objects.only("titulo")
-        prefect_libro=  Prefetch('libro_editorial', queryset= libros_query, to_attr='info_libro')
-                                               
-        editoriales = Editorial.objects.filter(
-            nombre__iexact='editorial gamma').prefetch_related(prefect_libro)            
-        
-        for editorial in editoriales:
-                for libro in editorial.info_libro:
-                    print(libro.titulo, editorial.nombre)
+        libros = Libro.objects.select_related('editorial').only("titulo", 'editorial__nombre')
+        for l in libros:
+            print(l.titulo, l.editorial.nombre)
 
         """
         PROBLEMA:
         - only("titulo") carga solo titulo. Acceder a editorial dispara query extra.
         EJERCICIO:
-        - Ajusta.
+        - Ajusta
         """
 
 
 # --- Caso 6 ---
-class Caso6DeferEjemplo(TemplateView): # MAAL
+class Caso6DeferEjemplo(TemplateView):
     template_name = "home.html"
 
     def get_context_data(self, **kwargs):
@@ -167,7 +139,7 @@ class Caso6DeferEjemplo(TemplateView): # MAAL
 
     @staticmethod
     def defer_ejemplo():
-        libros = Libro.objects.only("desc_corta")
+        libros = Libro.objects.only("titulo")
         for l in libros:
             print(l.titulo)
 
@@ -180,7 +152,7 @@ class Caso6DeferEjemplo(TemplateView): # MAAL
 
 
 # --- Caso 7 ---
-class Caso7AutoresLibrosEditorial(TemplateView):#Mal rehacer
+class Caso7AutoresLibrosEditorial(TemplateView):
     template_name = "home.html"
 
     def get_context_data(self, **kwargs):
@@ -191,29 +163,18 @@ class Caso7AutoresLibrosEditorial(TemplateView):#Mal rehacer
 
     @staticmethod
     def autores_libros_editorial():
-
-
-        autores_query = Autor.objects.only('name')
-        autor_prefetch= Prefetch('libros_autores', queryset=autores_query, to_attr='info_autor')
-        libro_query= Libro.objects.only('titulo').prefetch_related(autor_prefetch)
-        libro_prefetch= Prefetch('libro_editorial', queryset=libro_query, to_attr='libros')
-        editorial =Editorial.objects.only('nombre').prefetch_related(libro_prefetch)
-        for e in editorial:
-            for l in e.libros:
-                for a in l.libros.info_autor:
-                    print(a.name, l.titulo, e.nombre)
+        query = Libro.objects.select_related('editorial').only('titulo', 'editorial__nombre')
+        info_prefetch = Prefetch('book', queryset=query, to_attr='info')
+        
+        autores = Autor.objects.all().prefetch_related(info_prefetch).only('name')
+        
+        for a in autores:
+            for l in a.info:
+                print(a.name, l.titulo, l.editorial.nombre)
 
         """
         PROBLEMA:
         - N+1 por autores, N+1 por libros y otro N+1 por editoriales.
         EJERCICIO:
-        - Optimízalo.
+        - Optimízalo
         """
- # Bien
- # Bien
- 
- # mal
- # mal
- # mal
- # mal
- # mal
